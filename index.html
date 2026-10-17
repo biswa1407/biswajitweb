@@ -1,449 +1,379 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A11yPulse — Web Accessibility Auditor & Checklist</title>
-<meta name="description" content="Audit your site against WCAG 2.2 with a weighted checklist, code fixes, an HTML scanner, contrast auto-fixer, and live vision simulator.">
-<meta name="color-scheme" content="dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A0%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = { theme: { extend: { fontFamily: {
-  display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-  sans: ['Figtree', 'system-ui', 'sans-serif'],
-  mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] } } } };
-</script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-<style>
-  body{background:#020617;font-family:Figtree,system-ui,sans-serif}
-  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background:radial-gradient(40rem 28rem at 8% -5%,rgba(99,102,241,.22),transparent 60%),
-               radial-gradient(34rem 26rem at 100% 10%,rgba(16,185,129,.12),transparent 60%),
-               radial-gradient(30rem 24rem at 60% 110%,rgba(245,158,11,.08),transparent 60%)}
-  .glass{background:rgba(255,255,255,.045);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09)}
-  .item{transition:border-color .25s,background .25s}
-  .item:hover{border-color:rgba(129,140,248,.5)}
-  .item:has(input:checked){border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.06)}
-  .item:has(input:focus-visible){outline:2px solid #818cf8;outline-offset:2px}
-  .box{display:grid;place-items:center;width:1.6rem;height:1.6rem;flex:none;border-radius:.5rem;border:2px solid #64748b;transition:background .2s,border-color .2s}
-  .box svg{width:1rem;height:1rem;opacity:0;stroke:#022c22;stroke-width:3}
-  input:checked + .box{background:#10b981;border-color:#10b981}
-  input:checked + .box svg{opacity:1}
-  .item:has(input:checked) .ttl{color:#94a3b8}
-  pre{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-  :focus-visible{outline:2px solid #818cf8;outline-offset:2px}
-  summary{list-style:none}summary::-webkit-details-marker{display:none}
-  details[open] .chev{transform:rotate(90deg)}
-  .chev{transition:transform .2s}
-  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BiswajitWeb — Pro Network & Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; overflow-x: hidden; background: #020617; color: #f8fafc; }
+    .word, .letter { display: inline-block; }
+    .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .profile-pill { transition: all 0.3s ease; }
+    .profile-pill:hover { transform: translateY(-2px); border-color: rgba(99, 102, 241, 0.6); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3); }
+  </style>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-200 antialiased">
-<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-indigo-500 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+<body class="min-h-screen">
 
-<header class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 pt-6 sm:px-6">
-  <div class="enter flex items-center gap-3">
-    <span class="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 text-slate-950" aria-hidden="true"><i data-lucide="activity" class="h-6 w-6"></i></span>
-    <div>
-      <h1 class="font-display text-2xl font-extrabold tracking-tight text-white">A11yPulse</h1>
-      <p class="text-sm text-slate-400">WCAG 2.2 auditor and checklist</p>
+  <!-- TOP MARQUEE: ALL PROFILE NAMES VISIBLE ON TOPMOST HOME PAGE -->
+  <div class="bg-indigo-950/80 border-b border-indigo-900/50 py-2.5 px-4 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <span class="text-xs font-bold tracking-wider text-indigo-300 uppercase">Active Crew Matrix:</span>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-semibold text-slate-300" id="topProfileTicker">
+        <!-- Injected dynamically via JS so voice commands target them -->
+      </div>
     </div>
   </div>
-  <nav aria-label="Sections" class="enter glass flex gap-1 rounded-xl p-1">
-    <button data-view="checklist" class="vbtn rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="list-checks" class="mr-1.5 inline h-4 w-4 align-[-3px]"></i>Checklist</button>
-    <button data-view="fixes" class="vbtn rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="wrench" class="mr-1.5 inline h-4 w-4 align-[-3px]"></i>Fixes <span id="fixCount" class="ml-1 rounded-full bg-amber-400/20 px-2 py-0.5 text-xs text-amber-300">0</span></button>
-    <button data-view="tools" class="vbtn rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="scan-search" class="mr-1.5 inline h-4 w-4 align-[-3px]"></i>Tools</button>
-  </nav>
-</header>
 
-<div class="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[340px_1fr]">
-  <aside aria-label="Score dashboard" class="enter self-start lg:sticky lg:top-4">
-    <div class="glass rounded-2xl p-6">
-      <div class="relative mx-auto h-48 w-48">
-        <svg viewBox="0 0 120 120" class="h-full w-full" aria-hidden="true">
-          <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/>
-          <circle id="ring" cx="60" cy="60" r="52" fill="none" stroke="#f43f5e" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73" transform="rotate(-90 60 60)" style="filter:drop-shadow(0 0 6px currentColor)"/>
-        </svg>
-        <div class="absolute inset-0 grid place-items-center text-center">
-          <div><div id="pct" class="font-display text-5xl font-extrabold text-white">0%</div><div class="text-xs text-slate-400">weighted score</div></div>
+  <!-- MAIN NAVIGATION -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur sticky top-[41px] z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2 cursor-pointer" onclick="switchView('landing')">
+        <div class="bg-gradient-to-br from-indigo-500 to-emerald-400 p-2 rounded-xl text-slate-950 font-extrabold text-sm shadow-lg shadow-indigo-500/20">BW</div>
+        <span class="font-bold text-lg tracking-tight">Biswajit <span class="text-indigo-400">Web</span></span>
+      </div>
+      
+      <!-- Nav Actions & Login State -->
+      <div class="flex items-center gap-3">
+        <div id="navActions" class="hidden items-center">
+          <span id="navRoleBadge" class="text-xs bg-indigo-950 text-indigo-400 px-3 py-1 rounded-full border border-indigo-800/60 mr-3"></span>
+          <button onclick="logout()" class="text-sm text-slate-400 hover:text-white transition">Logout</button>
+        </div>
+        <button onclick="switchView('login')" id="loginNavBtn" class="text-xs font-semibold bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition">
+          Portal Login
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+
+    <!-- ================= VIEW 1: LANDING & PORTFOLIO HOME ================= -->
+    <div id="view-landing" class="space-y-16 pb-20">
+      
+      <!-- HERO SECTION -->
+      <div class="text-center pt-8 pb-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 text-xs font-medium mb-6 hero-badge">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i> Next-Gen Web Engineering & Creative Graphics
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black tracking-tight mb-4" id="heroHeading">
+          <span class="word">Engineering</span> <span class="word text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-emerald-400">Digital Mastery</span>
+        </h1>
+        <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto hero-sub">
+          High-performance web architecture, immersive graphics, and voice-responsive profile matrix built with Anime.js physics.
+        </p>
+
+        <!-- VOICE / HEARING COMMAND SIMULATOR BAR -->
+        <div class="mt-8 max-w-xl mx-auto glass rounded-2xl p-3 flex items-center gap-3 border border-indigo-500/30 shadow-2xl">
+          <div class="bg-indigo-600 p-2.5 rounded-xl text-white animate-pulse">
+            <i data-lucide="mic" class="w-5 h-5"></i>
+          </div>
+          <input type="text" id="voiceCommandInput" placeholder="Try typing a command like 'Call Mateus Aldana' or 'Inspect project'..." class="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none" />
+          <button onclick="triggerVoiceCommand()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex-shrink-0">
+            Execute
+          </button>
+        </div>
+        <p id="voiceFeedback" class="mt-2 text-xs text-emerald-400 h-4 font-mono"></p>
+      </div>
+
+      <!-- REBUILT GRAPHIC CARDS ROW (FANNED 3D PORTRAITS) -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <i data-lucide="users" class="w-5 h-5 text-indigo-400"></i> Featured Leadership & Design Crew
+          </h2>
+          <span class="text-xs text-slate-400">Hover or move mouse for parallax depth</span>
+        </div>
+
+        <div class="flex justify-center items-center flex-wrap sm:flex-nowrap gap-3 sm:gap-1 py-6" id="cardsRow">
+          <!-- Cards populated dynamically with data-rot and data-depth -->
         </div>
       </div>
-      <p id="status" class="mt-3 text-center font-display text-lg font-bold text-rose-400">Critical Issues - Non-Compliant</p>
-      <p id="srScore" class="sr-only" role="status" aria-live="polite"></p>
-      <p id="pts" class="mt-1 text-center text-sm text-slate-400"></p>
-      <ul id="bars" class="mt-5 space-y-3" aria-label="Category progress"></ul>
-      <div class="mt-6 grid gap-2">
-        <button id="export" class="flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"><i data-lucide="clipboard-copy" class="h-4 w-4"></i>Export audit report</button>
-        <button id="badgeBtn" class="flex items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"><i data-lucide="award" class="h-4 w-4"></i>Copy README status badge</button>
-        <div class="grid grid-cols-2 gap-2">
-          <button id="demo" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm font-medium transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="check-check" class="h-4 w-4"></i>Check all (demo)</button>
-          <button id="reset" class="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm font-medium transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="rotate-ccw" class="h-4 w-4"></i>Reset progress</button>
+
+      <!-- INTERACTIVE STATS COUNTER -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
+          <div class="text-4xl font-black text-indigo-400 mb-1"><span class="stat-num" data-count="62">0</span>+</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Production Projects</div>
+        </div>
+        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
+          <div class="text-4xl font-black text-emerald-400 mb-1"><span class="stat-num" data-count="14">0</span></div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Years Combined Craft</div>
+        </div>
+        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
+          <div class="text-4xl font-black text-purple-400 mb-1"><span class="stat-num" data-count="9">0</span><small>.9</small></div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Client Satisfaction NPS</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 2: LOGIN PORTAL ================= -->
+    <div id="view-login" class="hidden max-w-md mx-auto pt-12">
+      <div class="glass rounded-3xl p-8 shadow-2xl border border-slate-800">
+        <div class="text-center mb-8">
+          <div class="bg-indigo-600/20 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 border border-indigo-500/30">
+            <i data-lucide="lock" class="w-6 h-6 text-indigo-400"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Secure Portal Access</h2>
+          <p class="text-xs text-slate-400 mt-1">Authenticate to manage projects and member configurations.</p>
+        </div>
+
+        <form onsubmit="handlePortalLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1.5">Access Role</label>
+            <select id="loginRole" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option value="student">Student / Contributor</option>
+              <option value="admin">System Administrator</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1.5">Identifier / ID</label>
+            <input type="text" id="loginIdentifier" required placeholder="Enter PRN or Admin ID..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-indigo-600/30 mt-2">
+            Authenticate & Launch
+          </button>
+          <button type="button" onclick="switchView('landing')" class="w-full text-slate-400 text-xs mt-3 hover:text-white transition">
+            ← Return to Home Portfolio
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 3: DASHBOARD ================= -->
+    <div id="view-dashboard" class="hidden space-y-6">
+      <div class="glass p-6 rounded-2xl flex justify-between items-center border border-indigo-900/50">
+        <div>
+          <h1 class="text-2xl font-bold text-white mb-1">Control & Management Dashboard</h1>
+          <p class="text-slate-400 text-sm">Managing crew profiles, asset links, and live audio command hooks.</p>
+        </div>
+        <div class="bg-slate-900 px-4 py-3 rounded-xl border border-slate-800 text-right">
+          <span class="text-xs text-slate-400 uppercase block">Active Status</span>
+          <span class="text-sm font-bold text-emerald-400">Connected & Verified</span>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6 border border-slate-800">
+        <h3 class="text-lg font-bold text-white mb-4">Registered Crew Roster</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboardRoster">
+          <!-- Roster cards -->
         </div>
       </div>
     </div>
-  </aside>
 
-  <main id="main" class="enter min-w-0" tabindex="-1">
-    <section id="v-checklist" aria-labelledby="h-check">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 id="h-check" class="font-display text-2xl font-bold text-white">Audit checklist</h2>
-          <p class="mt-1 text-sm text-slate-400">Level A items count 3 points, AA 2 points and AAA 1 point.</p>
-        </div>
-        <div class="relative w-full sm:w-64">
-          <i data-lucide="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"></i>
-          <input id="search" type="search" placeholder="Search rules (press /)..." aria-label="Search checklist rules" class="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-        </div>
-      </div>
-      <div id="filters" role="group" aria-label="Filter checklist" class="mt-4 flex flex-wrap gap-2"></div>
-      <ul id="list" class="mt-5 grid gap-3"></ul>
-    </section>
-
-    <section id="v-fixes" hidden aria-labelledby="h-fix">
-      <h2 id="h-fix" class="font-display text-2xl font-bold text-white">Suggested improvements</h2>
-      <p class="mt-1 text-sm text-slate-400">Open items, highest priority first. Check an item off to remove it.</p>
-      <div id="fixes" class="mt-5 grid gap-3"></div>
-    </section>
-
-    <section id="v-tools" hidden aria-labelledby="h-tools" class="grid gap-6">
-      <div>
-        <h2 id="h-tools" class="font-display text-2xl font-bold text-white">HTML snippet scanner</h2>
-        <p class="mt-1 text-sm text-slate-400">Paste markup to find missing alt text, unlabeled fields, empty buttons, skipped headings and positive tabindex.</p>
-        <div class="glass mt-4 rounded-2xl p-4">
-          <label for="snip" class="mb-2 block text-sm font-medium">HTML to scan</label>
-          <textarea id="snip" rows="7" spellcheck="false" class="w-full rounded-xl border border-white/10 bg-slate-950/80 p-3 font-mono text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"></textarea>
-          <div class="mt-3 flex flex-wrap gap-2">
-            <button id="scan" class="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"><i data-lucide="zap" class="h-4 w-4"></i>Quick scan</button>
-            <button id="sample" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">Load sample</button>
-          </div>
-          <div id="scanOut" class="mt-4 grid gap-3" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="font-display text-2xl font-bold text-white">Contrast checker & auto-fixer</h2>
-        <div class="glass mt-4 grid gap-4 rounded-2xl p-4 sm:grid-cols-[auto_1fr]">
-          <div class="grid gap-3">
-            <label class="flex items-center gap-3 text-sm">Text <input id="fg" type="color" value="#94a3b8" class="h-9 w-14 cursor-pointer rounded border border-white/10 bg-transparent"></label>
-            <label class="flex items-center gap-3 text-sm">Background <input id="bg" type="color" value="#ffffff" class="h-9 w-14 cursor-pointer rounded border border-white/10 bg-transparent"></label>
-          </div>
-          <div>
-            <div id="cPrev" class="rounded-xl p-4 text-lg font-semibold">The quick brown fox jumps over the lazy dog.</div>
-            <p class="mt-3 text-sm">Ratio <strong id="cRatio" class="font-mono text-white"></strong></p>
-            <ul id="cBadges" class="mt-2 flex flex-wrap gap-2 text-xs"></ul>
-            <button id="autoFixContrast" type="button" class="mt-3 inline-flex items-center gap-1.5 rounded-xl border border-indigo-400/30 bg-indigo-500/15 px-3 py-1.5 text-xs font-semibold text-indigo-300 transition hover:bg-indigo-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
-              <i data-lucide="wand-2" class="h-3.5 w-3.5"></i> Auto-fix text color for AA (4.5:1)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- LIVE VISION & EMPATHY SIMULATOR -->
-      <div>
-        <h2 class="font-display text-2xl font-bold text-white">Live Vision & Empathy Simulator</h2>
-        <p class="mt-1 text-sm text-slate-400">Preview how users with visual impairments experience this entire application in real time.</p>
-        <div class="glass mt-4 rounded-2xl p-4">
-          <div class="flex flex-wrap gap-2" role="group" aria-label="Vision simulation modes">
-            <button type="button" data-sim="none" class="sim-btn rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition">Normal Vision</button>
-            <button type="button" data-sim="protanopia" class="sim-btn rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium transition hover:bg-white/10">Red-Blind (Protanopia)</button>
-            <button type="button" data-sim="deuteranopia" class="sim-btn rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium transition hover:bg-white/10">Green-Blind (Deuteranopia)</button>
-            <button type="button" data-sim="achromatopsia" class="sim-btn rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium transition hover:bg-white/10">Monochromacy (No Color)</button>
-            <button type="button" data-sim="cataracts" class="sim-btn rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium transition hover:bg-white/10">Low Vision (Cataracts)</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- HIDDEN SVG COLORBLINDNESS MATRICES -->
-      <svg class="sr-only" aria-hidden="true">
-        <defs>
-          <filter id="protanopia"><feColorMatrix type="matrix" values="0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0"/></filter>
-          <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0"/></filter>
-        </defs>
-      </svg>
-    </section>
   </main>
-</div>
 
-<footer class="mx-auto max-w-7xl px-4 pb-10 text-center text-sm text-slate-500 sm:px-6">Progress is saved in this browser only. A11yPulse covers a subset of WCAG 2.2; pair it with real assistive-technology testing.</footer>
-<div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-slate-800 px-4 py-2.5 text-sm text-white opacity-0 shadow-xl ring-1 ring-white/10"></div>
+  <footer class="max-w-6xl mx-auto px-4 py-10 border-t border-slate-800/80 text-center text-xs text-slate-500 mt-20">
+    BiswajitWeb Architecture & Graphics System · Powered by Anime.js & Tailwind CSS.
+  </footer>
 
-<script>
-const CATS = ['Perceivable','Operable','Understandable','Robust'];
-const CAT_ICON = {Perceivable:'eye',Operable:'keyboard',Understandable:'book-open',Robust:'braces'};
-const W = {A:3,AA:2,AAA:1};
-const LVL_CLS = {A:'bg-rose-500/15 text-rose-300 ring-rose-400/30',AA:'bg-amber-500/15 text-amber-300 ring-amber-400/30',AAA:'bg-indigo-500/15 text-indigo-300 ring-indigo-400/30'};
-const LVL_NAME = {A:'Critical',AA:'Important',AAA:'Enhanced'};
-const ITEMS = [
- {id:'alt',cat:'Perceivable',lvl:'A',t:'Images have text alternatives',d:'Every meaningful image has descriptive alt text; decorative images use alt="".',why:'Screen reader users hear nothing, or a file name, when alt text is missing.',bad:'<img src="chart.png">',good:'<img src="chart.png" alt="Sales rose 40% in Q3">\n<img src="swirl.svg" alt="">'},
- {id:'captions',cat:'Perceivable',lvl:'A',t:'Video and audio have captions',d:'Prerecorded media includes synchronized captions and a transcript.',why:'Deaf and hard-of-hearing users cannot follow spoken content without captions.',bad:'<video src="intro.mp4" controls></video>',good:'<video src="intro.mp4" controls>\n  <track kind="captions" src="intro.vtt"\n         srclang="en" label="English">\n</video>'},
- {id:'color',cat:'Perceivable',lvl:'A',t:'Color is not the only signal',d:'Errors, links and states also use text, icons or underlines.',why:'Users with color blindness cannot tell red from green status cues.',bad:'<span style="color:red">Invalid</span>',good:'<span class="text-red">\n  <svg aria-hidden="true">…</svg> Error: invalid email\n</span>'},
- {id:'contrast',cat:'Perceivable',lvl:'AA',t:'Text contrast is at least 4.5:1',d:'Normal text meets 4.5:1 and large text meets 3:1 against its background.',why:'Low-vision users and anyone in bright sunlight struggle to read faint text.',bad:'p { color:#aaa; background:#fff; } /* 2.3:1 */',good:'p { color:#595959; background:#fff; } /* 7:1 */'},
- {id:'reflow',cat:'Perceivable',lvl:'AA',t:'Content reflows at 400% zoom',d:'No horizontal scrolling at 320px width; text resizes without loss.',why:'Low-vision users zoom heavily and need a single readable column.',bad:'.page { width:1200px; }',good:'.page { max-width:1200px; width:100%; }\nbody { font-size:1rem; }'},
- {id:'enhanced',cat:'Perceivable',lvl:'AAA',t:'Enhanced contrast of 7:1',d:'Body text reaches 7:1 contrast for the highest readability.',why:'Users with moderately low vision read comfortably without magnifiers.',bad:'body { color:#767676; } /* 4.5:1 */',good:'body { color:#3d3d3d; } /* 10:1 */'},
- {id:'keyboard',cat:'Operable',lvl:'A',t:'Everything works with a keyboard',d:'All links, buttons and widgets can be reached and used with Tab, Enter and Space.',why:'Keyboard-only and switch users cannot click with a mouse.',bad:'<div onclick="save()">Save</div>',good:'<button type="button" onclick="save()">Save</button>'},
- {id:'trap',cat:'Operable',lvl:'A',t:'No keyboard traps',d:'Focus can always leave a component; modals close with Escape.',why:'A trap locks keyboard users inside a widget with no way out.',bad:'modal.onkeydown = e => e.preventDefault();',good:'modal.addEventListener("keydown", e => {\n  if (e.key === "Escape") closeModal();\n});'},
- {id:'skip',cat:'Operable',lvl:'A',t:'Skip link bypasses repeated blocks',d:'A "Skip to main content" link is the first focusable element.',why:'Keyboard users would otherwise tab through the whole menu on every page.',bad:'<nav>…50 links…</nav>\n<main>…</main>',good:'<a href="#main" class="skip">Skip to main content</a>\n<nav>…</nav>\n<main id="main">…</main>'},
- {id:'focus',cat:'Operable',lvl:'AA',t:'Focus is clearly visible',d:'Focused elements show a strong outline with at least 3:1 contrast.',why:'Sighted keyboard users lose track of where they are without a focus ring.',bad:'*:focus { outline:none; }',good:':focus-visible {\n  outline:3px solid #4f46e5;\n  outline-offset:2px;\n}'},
- {id:'target',cat:'Operable',lvl:'AA',t:'Targets are at least 24×24 CSS px',d:'Buttons and links are large enough or spaced apart (WCAG 2.2, 2.5.8).',why:'People with tremors or large fingers hit the wrong control on small targets.',bad:'.icon-btn { width:14px; height:14px; }',good:'.icon-btn { min-width:44px; min-height:44px; }'},
- {id:'labels',cat:'Understandable',lvl:'A',t:'Form fields have labels',d:'Each input has a visible, programmatically linked label.',why:'Screen readers announce "edit text" with no clue what to type.',bad:'<input type="email" placeholder="Email">',good:'<label for="email">Email</label>\n<input id="email" type="email" autocomplete="email">'},
- {id:'errors',cat:'Understandable',lvl:'A',t:'Errors are clear and announced',d:'Messages say what went wrong and how to fix it, linked to the field.',why:'Users with cognitive or visual disabilities need specific guidance to recover.',bad:'<input class="red-border">\n<span>Error</span>',good:'<input id="e" aria-invalid="true" aria-describedby="e-msg">\n<p id="e-msg" role="alert">Enter an email like name@site.com</p>'},
- {id:'lang',cat:'Understandable',lvl:'A',t:'Page language is declared',d:'The html element has a valid lang attribute.',why:'Screen readers pick the wrong voice and pronunciation without it.',bad:'<html>',good:'<html lang="en">'},
- {id:'plain',cat:'Understandable',lvl:'AAA',t:'Plain language and abbreviations explained',d:'Content is readable at lower-secondary level; jargon is defined.',why:'People with cognitive disabilities or low literacy can understand and act.',bad:'<p>Leverage our synergistic API paradigms.</p>',good:'<p>Use our <abbr title="Application Programming Interface">API</abbr> to connect your apps.</p>'},
- {id:'semantic',cat:'Robust',lvl:'A',t:'Semantic HTML structure',d:'Use real headings, lists, buttons and tables instead of styled divs.',why:'Assistive tech relies on native roles to navigate and announce content.',bad:'<div class="title">News</div>\n<div class="btn">Go</div>',good:'<h2>News</h2>\n<button type="button">Go</button>'},
- {id:'landmarks',cat:'Robust',lvl:'A',t:'ARIA landmarks are used',d:'Page uses header, nav, main, footer; multiple navs have distinct labels.',why:'Screen reader users jump between regions instead of reading linearly.',bad:'<div id="menu">…</div>\n<div id="content">…</div>',good:'<nav aria-label="Primary">…</nav>\n<main id="content">…</main>'},
- {id:'dom',cat:'Robust',lvl:'A',t:'Valid DOM with unique IDs',d:'No duplicate IDs; elements are properly nested and closed.',why:'Duplicate IDs break label and aria-describedby links for assistive tech.',bad:'<label for="n">A</label><input id="n">\n<label for="n">B</label><input id="n">',good:'<label for="first">A</label><input id="first">\n<label for="last">B</label><input id="last">'},
- {id:'status',cat:'Robust',lvl:'AA',t:'Status messages use live regions',d:'Toasts and updates are announced without moving focus.',why:'Screen reader users otherwise never learn that an action succeeded.',bad:'<div class="toast">Saved</div>',good:'<div role="status" aria-live="polite">Saved</div>'}
-];
-const TOTAL = ITEMS.reduce((s,i)=>s+W[i.lvl],0);
-const KEY = 'a11ypulse:v1';
-const $ = s => document.querySelector(s);
-const RM = matchMedia('(prefers-reduced-motion: reduce)');
-const canAnim = () => window.anime && !RM.matches;
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const icons = () => window.lucide && lucide.createIcons();
+  <script>
+    // CREW PROFILES DATA (EVERY PROFILE NAME IS DISPLAYED AT TOPMOST HOME PAGE)
+    const crewMembers = [
+      { name: "Mateus Aldana", role: "Creative Director", rot: -8, depth: 14, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/enr-1x1-01.jpg?v=1782002435?w=400&h=540&fit=crop&crop=faces&q=80" },
+      { name: "Eli Ramirez", role: "Design Lead", rot: -4, depth: 10, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/dermd_portrait-02.jpg?v=1782006127?w=400&h=540&fit=crop&crop=faces&q=80" },
+      { name: "Naomi Park", role: "Brand Strategist", rot: -1, depth: 8, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/moist-3x4-05.jpg?v=1781995150?w=400&h=540&fit=crop&crop=faces&q=80" },
+      { name: "Theo Vance", role: "Senior Engineer", rot: 2, depth: 12, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/lit-3x4-09.jpg?v=1781989746?w=400&h=540&fit=crop&crop=faces&q=80" },
+      { name: "Kit Bellamy", role: "Art Direction", rot: 6, depth: 9, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/ret-9x16-02.jpg?v=1781973910?w=400&h=540&fit=crop&crop=faces&q=80" }
+    ];
 
-let checked = new Set();
-try { checked = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...checked])); } catch (e) {} };
-let filter = 'All', query = '', view = 'checklist', shown = 0;
-const openFix = new Set();
+    let currentRole = localStorage.getItem('bw_role') || null;
 
-function stats(){
-  const done = ITEMS.filter(i=>checked.has(i.id)).reduce((s,i)=>s+W[i.lvl],0);
-  const per = CATS.map(c=>{
-    const its = ITEMS.filter(i=>i.cat===c);
-    const t = its.reduce((s,i)=>s+W[i.lvl],0), d = its.filter(i=>checked.has(i.id)).reduce((s,i)=>s+W[i.lvl],0);
-    return {c, pct: Math.round(d/t*100), n: its.filter(i=>checked.has(i.id)).length, len: its.length};
-  });
-  return {done, pct: Math.round(done/TOTAL*100), per};
-}
-function grade(p){
-  if (p===100) return {c:'#a5b4fc',cls:'text-indigo-300',l:'Perfect - Fully Accessible'};
-  if (p>=80) return {c:'#10b981',cls:'text-emerald-400',l:'Good - WCAG AA Ready'};
-  if (p>=50) return {c:'#f59e0b',cls:'text-amber-400',l:'Needs Work - Partially Compliant'};
-  return {c:'#f43f5e',cls:'text-rose-400',l:'Critical Issues - Non-Compliant'};
-}
+    // POPULATE TOPMOST TICKER & HERO CARDS ON LOAD
+    function initApp() {
+      // 1. Topmost Ticker Names
+      const tickerContainer = document.getElementById('topProfileTicker');
+      tickerContainer.innerHTML = crewMembers.map(m => `
+        <span class="profile-pill bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-full text-indigo-200 flex items-center gap-1.5 cursor-pointer shadow-sm" onclick="highlightMember('${m.name}')">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> ${m.name}
+        </span>
+      `).join('');
 
-function buildBars(){
-  $('#bars').innerHTML = CATS.map(c=>`<li><div class="mb-1 flex items-center justify-between text-xs"><span class="flex items-center gap-1.5 text-slate-300"><i data-lucide="${CAT_ICON[c]}" class="h-3.5 w-3.5"></i>${c}</span><span data-bp="${c}" class="font-mono text-slate-400">0%</span></div><div class="h-2 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label="${c}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-bt="${c}"><div data-bf="${c}" class="h-full w-0 rounded-full"></div></div></li>`).join('');
-}
+      // 2. Hero Cards Row Graphics
+      const cardsRow = document.getElementById('cardsRow');
+      cardsRow.innerHTML = crewMembers.map(m => `
+        <div class="fan-card w-36 sm:w-44 h-52 sm:h-64 rounded-2xl overflow-hidden border-2 border-slate-700/80 shadow-2xl -mx-3 bg-slate-800 transition transform hover:scale-105" data-rot="${m.rot}" data-depth="${m.depth}">
+          <div class="relative w-full h-full">
+            <img src="${m.img}" class="w-full h-full object-cover" alt="${m.name}" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-3">
+              <span class="text-xs font-bold text-white">${m.name}</span>
+              <span class="text-[10px] text-indigo-400 font-medium">${m.role}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
 
-function updateScore(){
-  const s = stats(), g = grade(s.pct), ring = $('#ring'), off = 326.73*(1-s.pct/100);
-  ring.setAttribute('stroke', g.c); ring.style.color = g.c;
-  const st = $('#status'); st.textContent = g.l; st.className = 'mt-3 text-center font-display text-lg font-bold ' + g.cls;
-  $('#pts').textContent = `${s.done} of ${TOTAL} weighted points`;
-  $('#srScore').textContent = `Score ${s.pct} percent. ${g.l}.`;
-  if (canAnim()){
-    anime.remove(ring);
-    anime({targets:ring, strokeDashoffset:off, duration:900, easing:'easeOutExpo'});
-    const o = {v:shown};
-    anime({targets:o, v:s.pct, round:1, duration:900, easing:'easeOutExpo', update:()=>{$('#pct').textContent=o.v+'%'}, complete:()=>{shown=s.pct}});
-  } else { ring.style.strokeDashoffset = off; $('#pct').textContent = s.pct+'%'; shown = s.pct; }
-  s.per.forEach(p=>{
-    const f = document.querySelector(`[data-bf="${p.c}"]`), t = document.querySelector(`[data-bt="${p.c}"]`);
-    f.style.background = grade(p.pct).c; t.setAttribute('aria-valuenow', p.pct);
-    document.querySelector(`[data-bp="${p.c}"]`).textContent = `${p.n}/${p.len} · ${p.pct}%`;
-    if (canAnim()) anime({targets:f, width:p.pct+'%', duration:700, easing:'easeOutCubic'}); else f.style.width = p.pct+'%';
-  });
-  $('#fixCount').textContent = ITEMS.length - checked.size;
-}
+      // 3. Dashboard Roster
+      const roster = document.getElementById('dashboardRoster');
+      if (roster) {
+        roster.innerHTML = crewMembers.map(m => `
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3">
+            <img src="${m.img}" class="w-12 h-12 rounded-lg object-cover" />
+            <div>
+              <h4 class="font-bold text-sm text-white">${m.name}</h4>
+              <p class="text-xs text-slate-400">${m.role}</p>
+            </div>
+          </div>
+        `).join('');
+      }
 
-function buildFilters(){
-  const opts = ['All',...CATS,'Incomplete only'];
-  $('#filters').innerHTML = opts.map(o=>`<button data-f="${o}" aria-pressed="${o===filter}" class="rounded-full px-4 py-1.5 text-sm font-medium ring-1 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${o===filter?'bg-indigo-500 text-white ring-indigo-400':'bg-white/5 text-slate-300 ring-white/10 hover:bg-white/10'}">${o}</button>`).join('');
-}
-
-function renderList(animate){
-  const q = query.trim().toLowerCase();
-  const its = ITEMS.filter(i => {
-    const matchF = filter==='All' ? true : filter==='Incomplete only' ? !checked.has(i.id) : i.cat===filter;
-    const matchQ = !q || i.t.toLowerCase().includes(q) || i.d.toLowerCase().includes(q) || i.cat.toLowerCase().includes(q);
-    return matchF && matchQ;
-  });
-  $('#list').innerHTML = its.length ? its.map(i=>`<li class="card"><label class="item glass flex cursor-pointer gap-4 rounded-2xl p-4"><input type="checkbox" class="sr-only" data-id="${i.id}" ${checked.has(i.id)?'checked':''}><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><span class="ttl font-display text-base font-bold text-white">${esc(i.t)}</span><span class="rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${LVL_CLS[i.lvl]}">Level ${i.lvl} · ${LVL_NAME[i.lvl]} · ${W[i.lvl]} pt${W[i.lvl]>1?'s':''}</span></span><span class="mt-1 block text-sm text-slate-400">${esc(i.d)}</span><span class="mt-2 inline-flex items-center gap-1 text-xs text-slate-500"><i data-lucide="${CAT_ICON[i.cat]}" class="h-3 w-3"></i>${i.cat}</span></span></label></li>`).join('')
-    : '<li class="glass rounded-2xl p-8 text-center text-emerald-300">No matching items in this view.</li>';
-  icons();
-  if (animate && canAnim()) anime({targets:'#list .card', opacity:[0,1], translateY:[18,0], delay:anime.stagger(55), duration:520, easing:'easeOutCubic'});
-}
-
-function renderFixes(){
-  const open = ITEMS.filter(i=>!checked.has(i.id)).sort((a,b)=>W[b.lvl]-W[a.lvl]);
-  if (!open.length){ $('#fixes').innerHTML = '<div class="glass rounded-2xl p-10 text-center"><p class="font-display text-xl font-bold text-emerald-300">All requirements met</p><p class="mt-1 text-sm text-slate-400">Nothing to fix. Keep testing with real assistive technology.</p></div>'; return; }
-  $('#fixes').innerHTML = open.map(i=>`<details data-d="${i.id}" ${openFix.has(i.id)?'open':''} class="glass rounded-2xl"><summary class="flex cursor-pointer items-center gap-3 rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"><i data-lucide="chevron-right" class="chev h-4 w-4 text-slate-400"></i><span class="flex-1 font-display font-bold text-white">${esc(i.t)}</span><span class="rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${LVL_CLS[i.lvl]}">Level ${i.lvl}</span></summary><div class="space-y-3 px-4 pb-4"><p class="flex gap-2 text-sm text-slate-300"><i data-lucide="users" class="mt-0.5 h-4 w-4 flex-none text-amber-300"></i><span><strong class="text-white">Why it matters:</strong> ${esc(i.why)}</span></p><div class="grid gap-3 md:grid-cols-2"><div class="rounded-xl border border-rose-500/30 bg-rose-500/5 p-3"><p class="mb-1 text-xs font-semibold text-rose-300">❌ Bad</p><pre class="text-rose-100">${esc(i.bad)}</pre></div><div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3"><p class="mb-1 text-xs font-semibold text-emerald-300">✅ Accessible fix</p><pre class="text-emerald-100">${esc(i.good)}</pre></div></div></div></details>`).join('');
-  icons();
-}
-
-function toast(m){
-  const t = $('#toast'); t.textContent = m;
-  if (canAnim()){ anime.remove(t); anime({targets:t, opacity:[0,1,1,0], translateY:[12,0,0,-6], duration:2400, easing:'easeOutQuad'}); }
-  else { t.style.opacity = 1; setTimeout(()=>t.style.opacity=0, 2200); }
-}
-function bounce(el){ if (canAnim()) anime({targets:el, scale:[1,.78,1.18,1], duration:480, easing:'easeOutElastic(1, .6)'}); }
-
-function setView(v, animate=true){
-  view = v;
-  ['checklist','fixes','tools'].forEach(n=>{ $('#v-'+n).hidden = n!==v; });
-  document.querySelectorAll('.vbtn').forEach(b=>{
-    const on = b.dataset.view===v;
-    b.setAttribute('aria-current', on ? 'page' : 'false');
-    b.className = 'vbtn rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ' + (on?'bg-indigo-500 text-white':'text-slate-300 hover:bg-white/10');
-  });
-  if (v==='checklist') renderList(animate); if (v==='fixes') renderFixes();
-  if (animate && v!=='checklist' && canAnim()) anime({targets:'#v-'+v+' > *', opacity:[0,1], translateY:[14,0], delay:anime.stagger(80), duration:500, easing:'easeOutCubic'});
-}
-
-/* Events */
-$('#list').addEventListener('change', e=>{
-  const id = e.target.dataset.id; if (!id) return;
-  e.target.checked ? checked.add(id) : checked.delete(id);
-  save(); bounce(e.target.nextElementSibling); updateScore();
-});
-$('#filters').addEventListener('click', e=>{
-  const b = e.target.closest('[data-f]'); if (!b) return;
-  filter = b.dataset.f; buildFilters(); renderList(true);
-  $('#filters [aria-pressed="true"]').focus();
-});
-$('#search').addEventListener('input', e=>{
-  query = e.target.value;
-  renderList(false);
-});
-window.addEventListener('keydown', e=>{
-  if (e.key === '/' && document.activeElement !== $('#search') && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
-    e.preventDefault();
-    if (view !== 'checklist') setView('checklist');
-    $('#search').focus();
-  }
-});
-$('#fixes').addEventListener('toggle', e=>{ const d = e.target; if (d.dataset.d) d.open ? openFix.add(d.dataset.d) : openFix.delete(d.dataset.d); }, true);
-document.querySelectorAll('.vbtn').forEach(b=>b.addEventListener('click',()=>{ bounce(b); setView(b.dataset.view); }));
-$('#reset').addEventListener('click', ()=>{ if (!confirm('Reset all progress? This cannot be undone.')) return; checked.clear(); save(); bounce($('#reset')); refresh(); toast('Progress reset'); });
-$('#demo').addEventListener('click', ()=>{ ITEMS.forEach(i=>checked.add(i.id)); save(); bounce($('#demo')); refresh(); toast('All items checked for demo'); });
-$('#export').addEventListener('click', async ()=>{
-  const s = stats(), g = grade(s.pct);
-  let md = `# A11yPulse Audit Report\n\n**Date:** ${new Date().toLocaleDateString()}\n**Score:** ${s.pct}% (${g.l})\n**Points:** ${s.done}/${TOTAL}\n\n`;
-  CATS.forEach(c=>{ md += `## ${c}\n`; ITEMS.filter(i=>i.cat===c).forEach(i=>{ md += `- [${checked.has(i.id)?'x':' '}] ${i.t} (Level ${i.lvl})\n`; }); md += '\n'; });
-  const open = ITEMS.filter(i=>!checked.has(i.id)).sort((a,b)=>W[b.lvl]-W[a.lvl]);
-  md += `## Action required (${open.length})\n` + (open.length ? open.map(i=>`- **Level ${i.lvl}:** ${i.t} — ${i.why}`).join('\n') : 'None. All requirements met.') + '\n';
-  bounce($('#export'));
-  try { await navigator.clipboard.writeText(md); toast('Report copied to clipboard'); }
-  catch (e){ const ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('Report copied to clipboard'); } catch (_) { toast('Copy failed. Try again.'); } ta.remove(); }
-});
-$('#badgeBtn').addEventListener('click', async ()=>{
-  const s = stats();
-  const color = s.pct >= 80 ? '10b981' : s.pct >= 50 ? 'f59e0b' : 'f43f5e';
-  const badgeMd = `![A11yPulse Accessibility Score](https://img.shields.io/badge/A11yPulse_WCAG_2.2-${s.pct}%25-${color}?style=for-the-badge)`;
-  bounce($('#badgeBtn'));
-  try { await navigator.clipboard.writeText(badgeMd); toast('README Markdown badge copied!'); }
-  catch (e) { toast('Copy failed.'); }
-});
-function refresh(){ updateScore(); if (view==='checklist') renderList(false); if (view==='fixes') renderFixes(); }
-
-/* Snippet scanner (Expanded with Heading & Tabindex Checks) */
-const SAMPLE = '<h1>Welcome</h1>\n<h4>Skipped heading</h4>\n<img src="team.jpg">\n<button tabindex="3"></button>\n<a href="/pricing"></a>\n<input type="email" placeholder="Email">';
-$('#snip').value = SAMPLE;
-$('#sample').addEventListener('click', ()=>{ $('#snip').value = SAMPLE; $('#snip').focus(); });
-$('#scan').addEventListener('click', ()=>{
-  bounce($('#scan'));
-  const html = $('#snip').value, doc = new DOMParser().parseFromString(html, 'text/html'), out = [];
-  const add = (title, lvl, found, fix) => out.push({title, lvl, found, fix});
-  doc.querySelectorAll('img:not([alt])').forEach(el=>{ const c = el.cloneNode(); c.setAttribute('alt','Describe the image'); add('Image is missing alt text','A',el.outerHTML,c.outerHTML); });
-  doc.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea').forEach(el=>{
-    const ok = el.getAttribute('aria-label') || el.getAttribute('aria-labelledby') || (el.id && doc.querySelector(`label[for="${CSS.escape(el.id)}"]`)) || el.closest('label');
-    if (ok) return;
-    const c = el.cloneNode(), id = el.id || 'field-id'; c.setAttribute('id', id);
-    add('Form field has no label','A',el.outerHTML,`<label for="${id}">Field label</label>\n${c.outerHTML}`);
-  });
-  const named = el => el.textContent.trim() || el.getAttribute('aria-label') || el.getAttribute('aria-labelledby') || el.getAttribute('title') || [...el.querySelectorAll('img[alt]')].some(i=>i.alt.trim());
-  doc.querySelectorAll('button,[role=button]').forEach(el=>{ if (named(el)) return; const c = el.cloneNode(true); c.setAttribute('aria-label','Describe the action'); add('Button has no accessible name','A',el.outerHTML,c.outerHTML); });
-  doc.querySelectorAll('a[href]').forEach(el=>{ if (named(el)) return; const c = el.cloneNode(true); c.setAttribute('aria-label','Describe the destination'); add('Link has no accessible name','A',el.outerHTML,c.outerHTML); });
-  doc.querySelectorAll('[tabindex]').forEach(el=>{
-    if (parseInt(el.getAttribute('tabindex'), 10) > 0) {
-      const c = el.cloneNode(true); c.setAttribute('tabindex', '0');
-      add('Positive tabindex disrupts keyboard order', 'A', el.outerHTML, c.outerHTML);
+      checkAuthState();
     }
-  });
-  const headings = [...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')];
-  headings.forEach((h, idx) => {
-    if (idx > 0) {
-      const prev = parseInt(headings[idx - 1].tagName[1], 10);
-      const curr = parseInt(h.tagName[1], 10);
-      if (curr - prev > 1) {
-        add(`Skipped heading level (<h${prev}> to <h${curr}>)`, 'AA', h.outerHTML, `<h${prev + 1}>${h.innerHTML}</h${prev + 1}>`);
+
+    // VIEW ROUTING
+    function switchView(viewName) {
+      ['landing', 'login', 'dashboard'].forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) el.classList.add('hidden');
+      });
+      document.getElementById('view-' + viewName).classList.remove('hidden');
+
+      if (viewName === 'landing') playLandingAnimations();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // AUTH HANDLING
+    function handlePortalLogin(e) {
+      e.preventDefault();
+      const role = document.getElementById('loginRole').value;
+      currentRole = role;
+      localStorage.setItem('bw_role', role);
+      checkAuthState();
+      switchView('dashboard');
+    }
+
+    function logout() {
+      currentRole = null;
+      localStorage.removeItem('bw_role');
+      checkAuthState();
+      switchView('landing');
+    }
+
+    function checkAuthState() {
+      const navActions = document.getElementById('navActions');
+      const loginBtn = document.getElementById('loginNavBtn');
+      const roleBadge = document.getElementById('navRoleBadge');
+
+      if (currentRole) {
+        navActions.classList.remove('hidden');
+        loginBtn.classList.add('hidden');
+        roleBadge.innerText = currentRole.toUpperCase() + ' ACCESS';
+      } else {
+        navActions.classList.add('hidden');
+        loginBtn.classList.remove('hidden');
       }
     }
-  });
-  if (/<html/i.test(html) && !doc.documentElement.getAttribute('lang')) add('Page language is not declared','A','<html>','<html lang="en">');
-  const box = $('#scanOut');
-  box.innerHTML = !html.trim() ? '<p class="text-sm text-amber-300">Paste some HTML first, then run the scan.</p>'
-   : !out.length ? '<p class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-300">No issues found in this snippet. Test with a screen reader to be sure.</p>'
-   : `<p class="text-sm font-semibold text-amber-300">${out.length} issue${out.length>1?'s':''} found</p>` + out.map(o=>`<div class="rounded-xl border border-white/10 bg-slate-950/60 p-3"><p class="mb-2 flex items-center gap-2 text-sm font-semibold text-white">${esc(o.title)}<span class="rounded-full px-2 py-0.5 text-xs ring-1 ${LVL_CLS[o.lvl]}">Level ${o.lvl}</span></p><div class="grid gap-2 md:grid-cols-2"><div class="rounded-lg bg-rose-500/10 p-2"><p class="text-xs font-semibold text-rose-300">❌ Found</p><pre class="text-rose-100">${esc(o.found)}</pre></div><div class="rounded-lg bg-emerald-500/10 p-2"><p class="text-xs font-semibold text-emerald-300">✅ Fix</p><pre class="text-emerald-100">${esc(o.fix)}</pre></div></div></div>`).join('');
-  if (out.length && canAnim()) anime({targets:'#scanOut > *', opacity:[0,1], translateY:[10,0], delay:anime.stagger(70), duration:400, easing:'easeOutCubic'});
-});
 
-/* Contrast checker & Auto-Fixer */
-const lum = h => { const v = [1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)); return .2126*v[0]+.7152*v[1]+.0722*v[2]; };
-function contrast(){
-  const f = $('#fg').value, b = $('#bg').value, a = lum(f), c = lum(b), r = (Math.max(a,c)+.05)/(Math.min(a,c)+.05);
-  $('#cPrev').style.color = f; $('#cPrev').style.background = b; $('#cRatio').textContent = r.toFixed(2)+':1';
-  const t = [['AA normal text',4.5],['AA large text',3],['AAA normal text',7],['AAA large text',4.5]];
-  $('#cBadges').innerHTML = t.map(([n,m])=>{ const p = r>=m; return `<li class="rounded-full px-3 py-1 font-semibold ring-1 ${p?'bg-emerald-500/15 text-emerald-300 ring-emerald-400/30':'bg-rose-500/15 text-rose-300 ring-rose-400/30'}">${p?'Pass':'Fail'} · ${n}</li>`; }).join('');
-}
-$('#fg').addEventListener('input', contrast); $('#bg').addEventListener('input', contrast);
+    // VOICE / HEARING COMMAND LOGIC (CALLS RECOGNIZED MEMBER'S NAME FIRST)
+    function triggerVoiceCommand() {
+      const input = document.getElementById('voiceCommandInput');
+      const feedback = document.getElementById('voiceFeedback');
+      const text = input.value.trim().toLowerCase();
 
-const toHex = n => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
-$('#autoFixContrast').addEventListener('click', () => {
-  const bgHex = $('#bg').value;
-  const bgLum = lum(bgHex);
-  let [r, g, b] = [1, 3, 5].map(i => parseInt($('#fg').value.substr(i, 2), 16));
-  const darken = bgLum > 0.5;
-  for (let step = 0; step < 255; step++) {
-    const candidate = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-    const l = lum(candidate);
-    const ratio = (Math.max(l, bgLum) + 0.05) / (Math.min(l, bgLum) + 0.05);
-    if (ratio >= 4.55) {
-      $('#fg').value = candidate;
-      contrast();
-      bounce($('#autoFixContrast'));
-      toast(`Adjusted text color to ${candidate} (Passes AA)`);
-      return;
+      if (!text) {
+        feedback.innerText = "⚠️ Please enter or simulate a voice command.";
+        return;
+      }
+
+      // Check if any crew member name is mentioned in the hearing command
+      const foundMember = crewMembers.find(m => text.includes(m.name.toLowerCase()));
+
+      if (foundMember) {
+        feedback.innerText = `🔊 Audio Command Recognized! Calling "${foundMember.name}" (${foundMember.role}) first.`;
+        highlightMember(foundMember.name);
+      } else {
+        feedback.innerText = `🎙️ Command processed: "${input.value}". Executing global action.`;
+      }
+      input.value = "";
     }
-    r += darken ? -4 : 4;
-    g += darken ? -4 : 4;
-    b += darken ? -4 : 4;
-  }
-});
 
-/* Live Vision & Empathy Simulator */
-const SIM_FILTERS = {
-  none: 'none',
-  protanopia: 'url(#protanopia)',
-  deuteranopia: 'url(#deuteranopia)',
-  achromatopsia: 'grayscale(100%)',
-  cataracts: 'blur(1.6px) contrast(75%)'
-};
-document.querySelectorAll('.sim-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const mode = btn.dataset.sim;
-    document.documentElement.style.filter = SIM_FILTERS[mode] || 'none';
-    document.querySelectorAll('.sim-btn').forEach(b => {
-      const active = b === btn;
-      b.className = 'sim-btn rounded-xl px-4 py-2 text-sm transition ' +
-        (active ? 'bg-indigo-500 font-semibold text-white' : 'border border-white/10 bg-white/5 font-medium hover:bg-white/10');
+    // HIGHLIGHT MEMBER VISUALLY WHEN CALLED
+    function highlightMember(name) {
+      const cards = document.querySelectorAll('.fan-card');
+      cards.forEach(card => {
+        const img = card.querySelector('img');
+        if (img && img.alt === name) {
+          anime({
+            targets: card,
+            scale: [1, 1.15, 1],
+            rotate: '0deg',
+            duration: 800,
+            easing: 'spring(1, 80, 10, 0)'
+          });
+          card.style.borderColor = '#6366f1';
+          setTimeout(() => card.style.borderColor = 'rgba(51, 65, 85, 0.8)', 2500);
+        }
+      });
+    }
+
+    // ANIME.JS TIMELINES & PARALLAX
+    function playLandingAnimations() {
+      const tl = anime.timeline({ easing: 'easeOutExpo' });
+      tl.add({
+        targets: '#heroHeading .word',
+        translateY: [30, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(100),
+        duration: 800
+      })
+      .add({
+        targets: '#cardsRow .fan-card',
+        translateY: [60, 0],
+        opacity: [0, 1],
+        rotate: (el) => el.getAttribute('data-rot') || 0,
+        delay: anime.stagger(70, { from: 'center' }),
+        duration: 900
+      }, '-=500');
+
+      // Stat Counters
+      document.querySelectorAll('.stat-num').forEach(el => {
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        anime({
+          targets: el,
+          innerHTML: [0, target],
+          round: 1,
+          easing: 'easeOutExpo',
+          duration: 2000
+        });
+      });
+    }
+
+    // Mouse Parallax for Cards
+    document.addEventListener('mousemove', (e) => {
+      const xNorm = (e.clientX / window.innerWidth - 0.5) * 2;
+      const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
+      document.querySelectorAll('.fan-card').forEach(card => {
+        const depth = parseFloat(card.getAttribute('data-depth')) || 10;
+        const baseRot = parseFloat(card.getAttribute('data-rot')) || 0;
+        anime({
+          targets: card,
+          translateX: xNorm * depth * 0.8,
+          translateY: yNorm * depth * 0.8,
+          rotate: baseRot + (xNorm * 1.5),
+          duration: 500,
+          easing: 'easeOutQuad'
+        });
+      });
     });
-    bounce(btn);
-    toast(`Vision mode: ${btn.textContent}`);
-  });
-});
 
-/* Init */
-buildBars(); buildFilters(); contrast(); setView('checklist', false); updateScore(); icons();
-if (canAnim()) anime({targets:'.enter', opacity:[0,1], translateY:[20,0], delay:anime.stagger(110), duration:700, easing:'easeOutExpo'});
-</script>
+    // Initialize on load
+    document.addEventListener("DOMContentLoaded", () => {
+      initApp();
+      lucide.createIcons();
+      playLandingAnimations();
+    });
+  </script>
 </body>
 </html>
