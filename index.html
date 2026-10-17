@@ -16,6 +16,8 @@
     .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .profile-pill { transition: all 0.3s ease; }
     .profile-pill:hover { transform: translateY(-2px); border-color: rgba(99, 102, 241, 0.6); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -30,9 +32,7 @@
         </span>
         <span class="text-xs font-bold tracking-wider text-indigo-300 uppercase">Active Crew Matrix:</span>
       </div>
-      <div class="flex items-center gap-3 text-xs font-semibold text-slate-300" id="topProfileTicker">
-        <!-- Injected dynamically via JS so voice commands target them -->
-      </div>
+      <div class="flex items-center gap-3 text-xs font-semibold text-slate-300" id="topProfileTicker"></div>
     </div>
   </div>
 
@@ -43,14 +43,17 @@
         <div class="bg-gradient-to-br from-indigo-500 to-emerald-400 p-2 rounded-xl text-slate-950 font-extrabold text-sm shadow-lg shadow-indigo-500/20">BW</div>
         <span class="font-bold text-lg tracking-tight">Biswajit <span class="text-indigo-400">Web</span></span>
       </div>
-      
+
       <!-- Nav Actions & Login State -->
       <div class="flex items-center gap-3">
-        <div id="navActions" class="hidden items-center">
-          <span id="navRoleBadge" class="text-xs bg-indigo-950 text-indigo-400 px-3 py-1 rounded-full border border-indigo-800/60 mr-3"></span>
-          <button onclick="logout()" class="text-sm text-slate-400 hover:text-white transition">Logout</button>
+        <div id="navActions" class="hidden items-center gap-3">
+          <span id="navRoleBadge" class="text-xs bg-indigo-950 text-indigo-400 px-3 py-1 rounded-full border border-indigo-800/60"></span>
+          <button type="button" onclick="switchView('dashboard')" class="text-xs font-semibold bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-lg transition">
+            Dashboard
+          </button>
+          <button type="button" onclick="logout()" class="text-sm text-slate-400 hover:text-white transition">Logout</button>
         </div>
-        <button onclick="switchView('login')" id="loginNavBtn" class="text-xs font-semibold bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition">
+        <button type="button" onclick="switchView('login')" id="loginNavBtn" class="text-xs font-semibold bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition">
           Portal Login
         </button>
       </div>
@@ -61,7 +64,7 @@
 
     <!-- ================= VIEW 1: LANDING & PORTFOLIO HOME ================= -->
     <div id="view-landing" class="space-y-16 pb-20">
-      
+
       <!-- HERO SECTION -->
       <div class="text-center pt-8 pb-4">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 text-xs font-medium mb-6 hero-badge">
@@ -71,309 +74,4 @@
           <span class="word">Engineering</span> <span class="word text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-emerald-400">Digital Mastery</span>
         </h1>
         <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto hero-sub">
-          High-performance web architecture, immersive graphics, and voice-responsive profile matrix built with Anime.js physics.
-        </p>
-
-        <!-- VOICE / HEARING COMMAND SIMULATOR BAR -->
-        <div class="mt-8 max-w-xl mx-auto glass rounded-2xl p-3 flex items-center gap-3 border border-indigo-500/30 shadow-2xl">
-          <div class="bg-indigo-600 p-2.5 rounded-xl text-white animate-pulse">
-            <i data-lucide="mic" class="w-5 h-5"></i>
-          </div>
-          <input type="text" id="voiceCommandInput" placeholder="Try typing a command like 'Call Mateus Aldana' or 'Inspect project'..." class="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none" />
-          <button onclick="triggerVoiceCommand()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex-shrink-0">
-            Execute
-          </button>
-        </div>
-        <p id="voiceFeedback" class="mt-2 text-xs text-emerald-400 h-4 font-mono"></p>
-      </div>
-
-      <!-- REBUILT GRAPHIC CARDS ROW (FANNED 3D PORTRAITS) -->
-      <div class="space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <i data-lucide="users" class="w-5 h-5 text-indigo-400"></i> Featured Leadership & Design Crew
-          </h2>
-          <span class="text-xs text-slate-400">Hover or move mouse for parallax depth</span>
-        </div>
-
-        <div class="flex justify-center items-center flex-wrap sm:flex-nowrap gap-3 sm:gap-1 py-6" id="cardsRow">
-          <!-- Cards populated dynamically with data-rot and data-depth -->
-        </div>
-      </div>
-
-      <!-- INTERACTIVE STATS COUNTER -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
-          <div class="text-4xl font-black text-indigo-400 mb-1"><span class="stat-num" data-count="62">0</span>+</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Production Projects</div>
-        </div>
-        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
-          <div class="text-4xl font-black text-emerald-400 mb-1"><span class="stat-num" data-count="14">0</span></div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Years Combined Craft</div>
-        </div>
-        <div class="glass rounded-2xl p-6 text-center border border-slate-800">
-          <div class="text-4xl font-black text-purple-400 mb-1"><span class="stat-num" data-count="9">0</span><small>.9</small></div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Client Satisfaction NPS</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ================= VIEW 2: LOGIN PORTAL ================= -->
-    <div id="view-login" class="hidden max-w-md mx-auto pt-12">
-      <div class="glass rounded-3xl p-8 shadow-2xl border border-slate-800">
-        <div class="text-center mb-8">
-          <div class="bg-indigo-600/20 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 border border-indigo-500/30">
-            <i data-lucide="lock" class="w-6 h-6 text-indigo-400"></i>
-          </div>
-          <h2 class="text-2xl font-bold text-white">Secure Portal Access</h2>
-          <p class="text-xs text-slate-400 mt-1">Authenticate to manage projects and member configurations.</p>
-        </div>
-
-        <form onsubmit="handlePortalLogin(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Access Role</label>
-            <select id="loginRole" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none">
-              <option value="student">Student / Contributor</option>
-              <option value="admin">System Administrator</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Identifier / ID</label>
-            <input type="text" id="loginIdentifier" required placeholder="Enter PRN or Admin ID..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-indigo-500 outline-none" />
-          </div>
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-indigo-600/30 mt-2">
-            Authenticate & Launch
-          </button>
-          <button type="button" onclick="switchView('landing')" class="w-full text-slate-400 text-xs mt-3 hover:text-white transition">
-            ← Return to Home Portfolio
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- ================= VIEW 3: DASHBOARD ================= -->
-    <div id="view-dashboard" class="hidden space-y-6">
-      <div class="glass p-6 rounded-2xl flex justify-between items-center border border-indigo-900/50">
-        <div>
-          <h1 class="text-2xl font-bold text-white mb-1">Control & Management Dashboard</h1>
-          <p class="text-slate-400 text-sm">Managing crew profiles, asset links, and live audio command hooks.</p>
-        </div>
-        <div class="bg-slate-900 px-4 py-3 rounded-xl border border-slate-800 text-right">
-          <span class="text-xs text-slate-400 uppercase block">Active Status</span>
-          <span class="text-sm font-bold text-emerald-400">Connected & Verified</span>
-        </div>
-      </div>
-
-      <div class="glass rounded-2xl p-6 border border-slate-800">
-        <h3 class="text-lg font-bold text-white mb-4">Registered Crew Roster</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboardRoster">
-          <!-- Roster cards -->
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="max-w-6xl mx-auto px-4 py-10 border-t border-slate-800/80 text-center text-xs text-slate-500 mt-20">
-    BiswajitWeb Architecture & Graphics System · Powered by Anime.js & Tailwind CSS.
-  </footer>
-
-  <script>
-    // CREW PROFILES DATA (EVERY PROFILE NAME IS DISPLAYED AT TOPMOST HOME PAGE)
-    const crewMembers = [
-      { name: "Mateus Aldana", role: "Creative Director", rot: -8, depth: 14, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/enr-1x1-01.jpg?v=1782002435?w=400&h=540&fit=crop&crop=faces&q=80" },
-      { name: "Eli Ramirez", role: "Design Lead", rot: -4, depth: 10, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/dermd_portrait-02.jpg?v=1782006127?w=400&h=540&fit=crop&crop=faces&q=80" },
-      { name: "Naomi Park", role: "Brand Strategist", rot: -1, depth: 8, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/moist-3x4-05.jpg?v=1781995150?w=400&h=540&fit=crop&crop=faces&q=80" },
-      { name: "Theo Vance", role: "Senior Engineer", rot: 2, depth: 12, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/lit-3x4-09.jpg?v=1781989746?w=400&h=540&fit=crop&crop=faces&q=80" },
-      { name: "Kit Bellamy", role: "Art Direction", rot: 6, depth: 9, img: "https://cdn.shopify.com/s/files/1/0185/5999/1872/files/ret-9x16-02.jpg?v=1781973910?w=400&h=540&fit=crop&crop=faces&q=80" }
-    ];
-
-    let currentRole = localStorage.getItem('bw_role') || null;
-
-    // POPULATE TOPMOST TICKER & HERO CARDS ON LOAD
-    function initApp() {
-      // 1. Topmost Ticker Names
-      const tickerContainer = document.getElementById('topProfileTicker');
-      tickerContainer.innerHTML = crewMembers.map(m => `
-        <span class="profile-pill bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-full text-indigo-200 flex items-center gap-1.5 cursor-pointer shadow-sm" onclick="highlightMember('${m.name}')">
-          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> ${m.name}
-        </span>
-      `).join('');
-
-      // 2. Hero Cards Row Graphics
-      const cardsRow = document.getElementById('cardsRow');
-      cardsRow.innerHTML = crewMembers.map(m => `
-        <div class="fan-card w-36 sm:w-44 h-52 sm:h-64 rounded-2xl overflow-hidden border-2 border-slate-700/80 shadow-2xl -mx-3 bg-slate-800 transition transform hover:scale-105" data-rot="${m.rot}" data-depth="${m.depth}">
-          <div class="relative w-full h-full">
-            <img src="${m.img}" class="w-full h-full object-cover" alt="${m.name}" />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-3">
-              <span class="text-xs font-bold text-white">${m.name}</span>
-              <span class="text-[10px] text-indigo-400 font-medium">${m.role}</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      // 3. Dashboard Roster
-      const roster = document.getElementById('dashboardRoster');
-      if (roster) {
-        roster.innerHTML = crewMembers.map(m => `
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3">
-            <img src="${m.img}" class="w-12 h-12 rounded-lg object-cover" />
-            <div>
-              <h4 class="font-bold text-sm text-white">${m.name}</h4>
-              <p class="text-xs text-slate-400">${m.role}</p>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      checkAuthState();
-    }
-
-    // VIEW ROUTING
-    function switchView(viewName) {
-      ['landing', 'login', 'dashboard'].forEach(v => {
-        const el = document.getElementById('view-' + v);
-        if (el) el.classList.add('hidden');
-      });
-      document.getElementById('view-' + viewName).classList.remove('hidden');
-
-      if (viewName === 'landing') playLandingAnimations();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // AUTH HANDLING
-    function handlePortalLogin(e) {
-      e.preventDefault();
-      const role = document.getElementById('loginRole').value;
-      currentRole = role;
-      localStorage.setItem('bw_role', role);
-      checkAuthState();
-      switchView('dashboard');
-    }
-
-    function logout() {
-      currentRole = null;
-      localStorage.removeItem('bw_role');
-      checkAuthState();
-      switchView('landing');
-    }
-
-    function checkAuthState() {
-      const navActions = document.getElementById('navActions');
-      const loginBtn = document.getElementById('loginNavBtn');
-      const roleBadge = document.getElementById('navRoleBadge');
-
-      if (currentRole) {
-        navActions.classList.remove('hidden');
-        loginBtn.classList.add('hidden');
-        roleBadge.innerText = currentRole.toUpperCase() + ' ACCESS';
-      } else {
-        navActions.classList.add('hidden');
-        loginBtn.classList.remove('hidden');
-      }
-    }
-
-    // VOICE / HEARING COMMAND LOGIC (CALLS RECOGNIZED MEMBER'S NAME FIRST)
-    function triggerVoiceCommand() {
-      const input = document.getElementById('voiceCommandInput');
-      const feedback = document.getElementById('voiceFeedback');
-      const text = input.value.trim().toLowerCase();
-
-      if (!text) {
-        feedback.innerText = "⚠️ Please enter or simulate a voice command.";
-        return;
-      }
-
-      // Check if any crew member name is mentioned in the hearing command
-      const foundMember = crewMembers.find(m => text.includes(m.name.toLowerCase()));
-
-      if (foundMember) {
-        feedback.innerText = `🔊 Audio Command Recognized! Calling "${foundMember.name}" (${foundMember.role}) first.`;
-        highlightMember(foundMember.name);
-      } else {
-        feedback.innerText = `🎙️ Command processed: "${input.value}". Executing global action.`;
-      }
-      input.value = "";
-    }
-
-    // HIGHLIGHT MEMBER VISUALLY WHEN CALLED
-    function highlightMember(name) {
-      const cards = document.querySelectorAll('.fan-card');
-      cards.forEach(card => {
-        const img = card.querySelector('img');
-        if (img && img.alt === name) {
-          anime({
-            targets: card,
-            scale: [1, 1.15, 1],
-            rotate: '0deg',
-            duration: 800,
-            easing: 'spring(1, 80, 10, 0)'
-          });
-          card.style.borderColor = '#6366f1';
-          setTimeout(() => card.style.borderColor = 'rgba(51, 65, 85, 0.8)', 2500);
-        }
-      });
-    }
-
-    // ANIME.JS TIMELINES & PARALLAX
-    function playLandingAnimations() {
-      const tl = anime.timeline({ easing: 'easeOutExpo' });
-      tl.add({
-        targets: '#heroHeading .word',
-        translateY: [30, 0],
-        opacity: [0, 1],
-        delay: anime.stagger(100),
-        duration: 800
-      })
-      .add({
-        targets: '#cardsRow .fan-card',
-        translateY: [60, 0],
-        opacity: [0, 1],
-        rotate: (el) => el.getAttribute('data-rot') || 0,
-        delay: anime.stagger(70, { from: 'center' }),
-        duration: 900
-      }, '-=500');
-
-      // Stat Counters
-      document.querySelectorAll('.stat-num').forEach(el => {
-        const target = parseInt(el.getAttribute('data-count'), 10);
-        anime({
-          targets: el,
-          innerHTML: [0, target],
-          round: 1,
-          easing: 'easeOutExpo',
-          duration: 2000
-        });
-      });
-    }
-
-    // Mouse Parallax for Cards
-    document.addEventListener('mousemove', (e) => {
-      const xNorm = (e.clientX / window.innerWidth - 0.5) * 2;
-      const yNorm = (e.clientY / window.innerHeight - 0.5) * 2;
-      document.querySelectorAll('.fan-card').forEach(card => {
-        const depth = parseFloat(card.getAttribute('data-depth')) || 10;
-        const baseRot = parseFloat(card.getAttribute('data-rot')) || 0;
-        anime({
-          targets: card,
-          translateX: xNorm * depth * 0.8,
-          translateY: yNorm * depth * 0.8,
-          rotate: baseRot + (xNorm * 1.5),
-          duration: 500,
-          easing: 'easeOutQuad'
-        });
-      });
-    });
-
-    // Initialize on load
-    document.addEventListener("DOMContentLoaded", () => {
-      initApp();
-      lucide.createIcons();
-      playLandingAnimations();
-    });
-  </script>
-</body>
-</html>
+          High-performance web architecture, immersive graphics,
